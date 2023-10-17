@@ -1,0 +1,25 @@
+{
+	"quiet": {"text": "-", "fg": "0xFFFFFF", "bg": "0x000000"},
+	"default": {"text": "billboard", "fg": "0xFFFFFF", "bg": "0x000000"},
+	"text1": {
+		"text" : "howdy",
+		"bg": "0x020202",
+		"fg": "0x101010"
+	},
+	"scroll-text": {
+		"stext" : "scroll this by me",
+		"bg": "0x800020",
+		"fg": "0xAAAAAA",
+		"rate" : ".2"	
+	},
+	"wrap-example": {
+		"text" : "wrap text\nexample",
+		"fg" : "0x982200",
+		"bg" : "0x000000"
+	},
+	"in-meeting": {
+		"text": "IN A\nMEETING",
+		"fg" : "0xFF11BB",
+		"bg" : "0x000000"
+	}
+}
