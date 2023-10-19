@@ -1,0 +1,6 @@
+ContentManager	KEYWORD1
+begin			KEYWORD2
+nextMessage		KEYWORD2
+prevMessage		KEYWORD2
+dumpMessage		KEYWORD2
+dumpDoc			KEYWORD2
