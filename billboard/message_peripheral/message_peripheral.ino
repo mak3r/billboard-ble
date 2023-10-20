@@ -104,26 +104,26 @@ void input_control(int8_t ch) {
     cm.prevMessage();
     cm.dumpMessage(cm.cur);
     // bleuart.write(cm.cur.text);
-    serializeCurrent();
+    serialize(cm.cur);
   }
   if (ch == 'n') {
     cm.nextMessage();
     cm.dumpMessage(cm.cur);
-    bleuart.write(cm.cur.text);
+    // bleuart.write(cm.cur.text);
+    serialize(cm.cur);
   }
   if (ch == 'd') {
     cm.dumpDoc();
   }
 }
 
-void serializeCurrent() {
-  StaticJsonDocument<192> doc;
+void serialize(struct ContentManager::message &msg) {
+  StaticJsonDocument<128> doc;
 
-  JsonObject jo = doc.createNestedObject("msg");
-  jo["text"] = cm.cur.text;
-  jo["bg"] = cm.cur.bg;
-  jo["fg"] = cm.cur.fg;
-  jo["rate"] = cm.cur.scroll;
+  doc["text"] = msg.text;
+  doc["bg"] = msg.bg;
+  doc["fg"] = msg.fg;
+  doc["rate"] = msg.scroll;
   
   serializeJson(doc, bleuart);
 }

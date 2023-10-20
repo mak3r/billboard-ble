@@ -92,9 +92,9 @@ void ContentManager::_updateMessages(int8_t msg_id) {
   int8_t next_id = _boundId(cur_id + 1);
   int8_t prev_id = _boundId(cur_id - 1);
 
-  _populateMessage(&cur, cur_id);
-  _populateMessage(&next, next_id);
-  _populateMessage(&prev, prev_id);
+  _populateMessage(cur, cur_id);
+  _populateMessage(next, next_id);
+  _populateMessage(prev, prev_id);
 
 }
 
@@ -110,15 +110,15 @@ int8_t ContentManager::_boundId(int8_t id) {
   return id;
 }
 
-void ContentManager::_populateMessage(struct message *msg, uint8_t index) {
-  msg->key_id = index;
-  msg->text = doc[KEYS[index]]["text"];
-  msg->bg = doc[KEYS[index]]["bg"];
-  msg->fg = doc[KEYS[index]]["fg"];
-  msg->scroll = (doc[KEYS[index]]["scroll"] != NULL ? doc[KEYS[index]]["scroll"] : 0);
+void ContentManager::_populateMessage(struct ContentManager::message &msg, uint8_t index) {
+  msg.key_id = index;
+  msg.text = doc[KEYS[index]]["text"];
+  msg.bg = doc[KEYS[index]]["bg"];
+  msg.fg = doc[KEYS[index]]["fg"];
+  msg.scroll = (doc[KEYS[index]]["scroll"] != NULL ? doc[KEYS[index]]["scroll"] : 0);
 }
 
-void ContentManager::dumpMessage(struct message msg) {
+void ContentManager::dumpMessage(struct ContentManager::message &msg) {
   StaticJsonDocument<192> doc;
 
   JsonObject jo = doc.createNestedObject(KEYS[msg.key_id]);

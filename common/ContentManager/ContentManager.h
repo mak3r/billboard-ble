@@ -27,7 +27,7 @@ class ContentManager {
 		void begin();
 		void nextMessage();
 		void prevMessage();
-		void dumpMessage(struct message msg);
+		void dumpMessage(struct ContentManager::message &msg);
 		void dumpDoc();
 
 	private:
@@ -37,7 +37,7 @@ class ContentManager {
 		void _loadContentJSON();
 		void _updateMessages(int8_t msg_id);
 		int8_t _boundId(int8_t id);
-		void _populateMessage(struct message *msg, uint8_t index);
+		void _populateMessage(struct message &msg, uint8_t index);
 };
 
 #endif
