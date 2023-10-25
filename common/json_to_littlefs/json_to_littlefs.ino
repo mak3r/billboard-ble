@@ -31,7 +31,7 @@ const char* MESSAGES = R"(
 		"fg": "0x101010"
 	},
 	"scroll-text": {
-		"stext" : "scroll this by me",
+		"text" : "scroll this by me",
 		"bg": "0x800020",
 		"fg": "0xAAAAAA",
 		"rate" : ".2"	
