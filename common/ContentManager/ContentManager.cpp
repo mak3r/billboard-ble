@@ -115,7 +115,7 @@ void ContentManager::_populateMessage(struct ContentManager::message &msg, uint8
   msg.text = doc[KEYS[index]]["text"];
   msg.bg = doc[KEYS[index]]["bg"];
   msg.fg = doc[KEYS[index]]["fg"];
-  msg.scroll = (doc[KEYS[index]]["scroll"] != NULL ? doc[KEYS[index]]["scroll"] : 0);
+  msg.scroll = (doc[KEYS[index]]["scroll"] != NULL ? strtof(doc[KEYS[index]]["rate"], NULL) : 0);
 }
 
 void ContentManager::dumpMessage(struct ContentManager::message &msg) {

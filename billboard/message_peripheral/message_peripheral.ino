@@ -10,6 +10,8 @@
 #include <BLEPeripheral.h>
 #include <ContentManager.h>
 #include <Adafruit_Protomatter.h>
+#include <Fonts/FreeSansBoldOblique18pt7b.h>
+#include <Fonts/FreeMono9pt7b.h>
 
 // BLE Service
 BLEPeripheral blep; // uart over ble
@@ -30,7 +32,7 @@ Adafruit_Protomatter matrix(
   1, rgbPins,  // # of matrix chains, array of 6 RGB pins for each
   4, addrPins, // # of address pins (height is inferred), array of pins
   clockPin, latchPin, oePin, // Other matrix control pins
-  true);      // No double-buffering here (see "doublebuffer" example)
+  true);      // double-buffering here (see "doublebuffer" example)
 
 int16_t  textX;        // Current text position (X)
 int16_t  textY;        // Current text position (Y)
@@ -62,6 +64,8 @@ void setup()
     for(;;);
   }
 
+  // Post the first message
+  updateMessage();
 }
 
 
@@ -82,17 +86,21 @@ void loop() {
     delay(2);
 
     ch = (int8_t) Serial.read();
-    input_control(ch);
-    updateMessage();
+    if (ch != '\n') {
+      input_control(ch);
+      updateMessage();
+    }
   }
 
   //We don't wrap if we are going to scroll
   if (cm.cur.scroll > 0) {
-    Serial.println("Scrolling ...");
     //Handle scrolling text
+    matrix.fillScreen(strtoul(cm.cur.bg, 0, 16));
+    matrix.setCursor(textX,textY);
     // Update text position for next frame. If text goes off the
     // left edge, reset its position to be off the right edge.
     if((--textX) < textMin) textX = matrix.width();
+    matrix.print(cm.cur.text);
     matrix.show();
     delay(cm.cur.scroll*100); // 20 milliseconds = ~50 frames/second
   }
@@ -100,26 +108,43 @@ void loop() {
 
 void updateMessage() {
   matrix.fillScreen(strtoul(cm.cur.bg, 0, 16));
+  matrix.setTextColor(strtoul(cm.cur.fg, 0, 16));
+  matrix.setTextSize(1);
 
   //Must resolve text wrap before setting the bounds
   if (cm.cur.scroll > 0) {
     matrix.setTextWrap(false);
+    matrix.setFont(&FreeSansBoldOblique18pt7b);
   } else {
     matrix.setTextWrap(true);
+    matrix.setFont(&FreeMono9pt7b);
   }
 
+  initializeCursor();
+
+  matrix.print(cm.cur.text);
+  matrix.show();
+}
+
+void initializeCursor() {
+  Serial.printf("matrix w:h[%d:%d]\n", matrix.width(), matrix.height());
   int16_t  x1, y1;
   uint16_t w, h;
   matrix.getTextBounds(cm.cur.text, 0, 0, &x1, &y1, &w, &h); // How big is it?
+  Serial.printf("x1:y1[%d:%d], w:h[%d:%d]\n", x1, y1, w, h);
   textMin = -w; // All text is off left edge when it reaches this point
-  textX = matrix.width(); // Start off right edge
+
+  //Center Y, Center X unless we are scrolling, then start offscreen 
+  if (cm.cur.scroll > 0) {
+    textX = matrix.width();
+  } else {
+    textX = matrix.width()/2 - (x1 + w / 2);
+  }
   textY = matrix.height() / 2 - (y1 + h / 2); // Center text vertically
 
   matrix.setCursor(textX,textY);
-  matrix.setTextColor(strtoul(cm.cur.fg, 0, 16));
-  matrix.setTextSize(1);
-  matrix.print(cm.cur.text);
-  matrix.show();
+  Serial.printf("textMin: [%d], textX: [%d], textY: [%d]\n", textMin, textX, textY);
+
 }
 
 void input_control(int8_t ch) {

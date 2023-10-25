@@ -34,17 +34,24 @@ const char* MESSAGES = R"(
 		"text" : "scroll this by me",
 		"bg": "0x800020",
 		"fg": "0xAAAAAA",
-		"rate" : ".2"	
+		"rate" : ".3"	
 	},
 	"wrap-example": {
-		"text" : "wrap text\nexample",
+		"text" : "wrap text\n example ",
 		"fg" : "0x982200",
 		"bg" : "0x000000"
 	},
 	"in-meeting": {
-		"text": "IN A\nMEETING",
+		"text": "IN A MEETING",
 		"fg" : "0xFF11BB",
-		"bg" : "0x000000"
+		"bg" : "0x000000",
+		"rate" : ".3"
+	},
+	"welcome": {
+		"text": "Welcome to CEHC",
+		"fg" : "0xFFFF00",
+		"bg" : "0xDD00FF",
+		"rate" : ".25"
 	}
 }
 )";
