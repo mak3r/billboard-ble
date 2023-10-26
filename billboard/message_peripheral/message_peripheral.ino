@@ -28,7 +28,7 @@ uint8_t oePin      = PIN_SERIAL1_TX;
 
 Adafruit_Protomatter matrix(
   64,          // Width of matrix (or matrix chain) in pixels
-  4,           // Bit depth, 1-6
+  5,           // Bit depth, 1-6
   1, rgbPins,  // # of matrix chains, array of 6 RGB pins for each
   4, addrPins, // # of address pins (height is inferred), array of pins
   clockPin, latchPin, oePin, // Other matrix control pins
@@ -95,7 +95,7 @@ void loop() {
   //We don't wrap if we are going to scroll
   if (cm.cur.scroll > 0) {
     //Handle scrolling text
-    matrix.fillScreen(strtoul(cm.cur.bg, 0, 16));
+    matrix.fillScreen(convertColor(cm.cur.bg));
     matrix.setCursor(textX,textY);
     // Update text position for next frame. If text goes off the
     // left edge, reset its position to be off the right edge.
@@ -107,8 +107,11 @@ void loop() {
 }
 
 void updateMessage() {
-  matrix.fillScreen(strtoul(cm.cur.bg, 0, 16));
-  matrix.setTextColor(strtoul(cm.cur.fg, 0, 16));
+
+  matrix.fillScreen(convertColor(cm.cur.bg));
+
+  // matrix.fillScreen(0xF8FCFF & strtoul(cm.cur.bg, 0, 16));
+  matrix.setTextColor(convertColor(cm.cur.fg));
   matrix.setTextSize(1);
 
   //Must resolve text wrap before setting the bounds
@@ -117,7 +120,7 @@ void updateMessage() {
     matrix.setFont(&FreeSansBoldOblique18pt7b);
   } else {
     matrix.setTextWrap(true);
-    matrix.setFont(&FreeMono9pt7b);
+    matrix.setFont();
   }
 
   initializeCursor();
@@ -126,12 +129,26 @@ void updateMessage() {
   matrix.show();
 }
 
+/*
+Convert a hex string color from the format 0xAABBCC
+to an RGB565 color
+*/
+uint16_t convertColor(const char * color) {
+  const char red[3] = {color[2], color[3], '\0'};
+  const char green[3] = {color[4], color[5], '\0'};
+  const char blue[3] = {color[6], color[7], '\0'};
+  // Serial.printf("HEX - (bg)red:green:blue(%s)[%x:%x:%x]\n", color, (uint8_t)strtoul(red, 0, 16), strtoul(green, 0, 16), strtoul(blue, 0, 16));
+  // Serial.printf("DEC - red:green:blue[%d:%d:%d]\n", (uint8_t)strtoul(red, 0, 16), strtoul(green, 0, 16), strtoul(blue, 0, 16));
+  
+  return matrix.color565( (uint8_t)strtoul(red,0,16), (uint8_t)strtoul(green,0,16), (uint8_t)strtoul(blue,0,16) );
+}
+
 void initializeCursor() {
-  Serial.printf("matrix w:h[%d:%d]\n", matrix.width(), matrix.height());
+  // Serial.printf("matrix w:h[%d:%d]\n", matrix.width(), matrix.height());
   int16_t  x1, y1;
   uint16_t w, h;
   matrix.getTextBounds(cm.cur.text, 0, 0, &x1, &y1, &w, &h); // How big is it?
-  Serial.printf("x1:y1[%d:%d], w:h[%d:%d]\n", x1, y1, w, h);
+  // Serial.printf("x1:y1[%d:%d], w:h[%d:%d]\n", x1, y1, w, h);
   textMin = -w; // All text is off left edge when it reaches this point
 
   //Center Y, Center X unless we are scrolling, then start offscreen 
@@ -143,7 +160,7 @@ void initializeCursor() {
   textY = matrix.height() / 2 - (y1 + h / 2); // Center text vertically
 
   matrix.setCursor(textX,textY);
-  Serial.printf("textMin: [%d], textX: [%d], textY: [%d]\n", textMin, textX, textY);
+  // Serial.printf("textMin: [%d], textX: [%d], textY: [%d]\n", textMin, textX, textY);
 
 }
 

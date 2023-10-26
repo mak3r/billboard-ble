@@ -23,21 +23,8 @@ using namespace Adafruit_LittleFS_Namespace;
 #define FILENAME    "/content.json"
 const char* MESSAGES = R"(
 {
-	"quiet": {"text": "-", "fg": "0xFFFFFF", "bg": "0x000000"},
-	"default": {"text": "billboard", "fg": "0xFFFFFF", "bg": "0x000000"},
-	"text1": {
-		"text" : "howdy",
-		"bg": "0x020202",
-		"fg": "0x101010"
-	},
-	"scroll-text": {
-		"text" : "scroll this by me",
-		"bg": "0x800020",
-		"fg": "0xAAAAAA",
-		"rate" : ".3"	
-	},
-	"wrap-example": {
-		"text" : "wrap text\n example ",
+	"dnd": {
+		"text" : "Do Not\n\n Disturb",
 		"fg" : "0x982200",
 		"bg" : "0x000000"
 	},
@@ -49,9 +36,20 @@ const char* MESSAGES = R"(
 	},
 	"welcome": {
 		"text": "Welcome to CEHC",
-		"fg" : "0xFFFF00",
-		"bg" : "0xDD00FF",
+		"fg" : "0xDDDD00",
+		"bg" : "0x800080",
 		"rate" : ".25"
+	},
+  "knock": {
+		"text" : "PLEASE\n\n KNOCK",
+		"bg": "0x020202",
+		"fg": "0x101010"
+	},
+	"come-in": {
+		"text" : "Come In",
+		"bg": "0x800020",
+		"fg": "0xAAAAAA",
+		"rate" : ".3"	
 	}
 }
 )";
