@@ -23,7 +23,13 @@ using namespace Adafruit_LittleFS_Namespace;
 #define FILENAME    "/content.json"
 const char* MESSAGES = R"(
 {
-	"dnd": {
+	"welcome": {
+		"text": "Welcome to CEHC",
+		"fg" : "0xDDDD00",
+		"bg" : "0x800080",
+		"rate" : ".25"
+	},
+  "dnd": {
 		"text" : "Do Not\n\n Disturb",
 		"fg" : "0x982200",
 		"bg" : "0x000000"
@@ -34,13 +40,7 @@ const char* MESSAGES = R"(
 		"bg" : "0x000000",
 		"rate" : ".3"
 	},
-	"welcome": {
-		"text": "Welcome to CEHC",
-		"fg" : "0xDDDD00",
-		"bg" : "0x800080",
-		"rate" : ".25"
-	},
-  "knock": {
+	"knock": {
 		"text" : "PLEASE\n\n KNOCK",
 		"bg": "0x020202",
 		"fg": "0x101010"

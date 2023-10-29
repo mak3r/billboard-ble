@@ -178,6 +178,10 @@ void input_control(int8_t ch) {
   if (ch == 'd') {
     cm.dumpDoc();
   }
+  if (ch == 'c') {
+    cm.dumpMessage(cm.cur);
+    serialize(cm.cur);
+  }
 }
 
 void serialize(struct ContentManager::message &msg) {
