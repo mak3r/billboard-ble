@@ -20,6 +20,8 @@ BILLBOARD_NAME = "F-nRF52"
 
 # Display Stuff
 display = clue.display
+BUTTON_L = clue.button_a
+BUTTON_R = clue.button_b
 disp_group = displayio.Group()
 display.show(disp_group)
 
@@ -67,6 +69,14 @@ await_message = False
 # A byte array of json formatted content
 response = bytearray('', 'utf-8')
 
+# Rotate the display 180°
+# Switch button left/right
+def rotate_display():
+    global BUTTON_L 
+    global BUTTON_R
+    display.rotation = 180 
+    BUTTON_L = clue.button_b
+    BUTTON_R = clue.button_a
 
 curly_count = 0
 def capture_json(data = b''):
@@ -246,11 +256,14 @@ def write_ble(content:bytes = b''):
 # Display fade management
 display_delay = 10
 display_time = time.monotonic()
+DISPLAY_ASLEEP = False
 
 def reset_display_sleep():
     global display_time
+    global DISPLAY_ASLEEP
     display_time = time.monotonic()
     display.brightness = 1.0
+    DISPLAY_ASLEEP = False
 
 
 # Just booting up - set the first instruction
@@ -261,6 +274,7 @@ update_label(INITIAL_CONNECTION)
 button_delay = 0.2
 button_time = time.monotonic()
 
+rotate_display()
 reset_display_sleep()
 while True:
     if (time.monotonic() - display_time) > display_delay:
@@ -268,11 +282,12 @@ while True:
             display.brightness = display.brightness - 0.1
         else:
             display.brightness = 0
+            DISPLAY_ASLEEP = True
         display_time = time.monotonic()
     
     if clue.proximity > 5:
         display.brightness = 1.0
-        display_time = time.monotonic()
+        reset_display_sleep()
 
     elif ble.connected:
         if (time.monotonic() - button_time) > button_delay:
@@ -305,20 +320,22 @@ while True:
 
     else: #BLE not connected
         debug_group.hidden = False
-        if MANUAL_CONNECT:
-            # Useful for manually handling connections
-            if clue.button_a and clue.button_b:
+        # Don't bother trying to connect if the display is asleep
+        if not DISPLAY_ASLEEP:
+            if MANUAL_CONNECT:
+                # Useful for manually handling connections
+                if clue.button_a and clue.button_b:
+                    if not billboard:
+                        billboard = scan()
+                    else:
+                        connect(billboard=billboard)
+            else:
+                # Autoconnect
+                scroll_group.hidden = True
+                static_group.hidden = True
+                debug_label.text = DISCONNECTED
                 if not billboard:
                     billboard = scan()
                 else:
                     connect(billboard=billboard)
-        else:
-            # Autoconnect
-            scroll_group.hidden = True
-            static_group.hidden = True
-            debug_label.text = DISCONNECTED
-            if not billboard:
-                billboard = scan()
-            else:
-                connect(billboard=billboard)
 
