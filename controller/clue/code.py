@@ -74,7 +74,7 @@ response = bytearray('', 'utf-8')
 def rotate_display():
     global BUTTON_L 
     global BUTTON_R
-    display.rotation = 180 
+    display.rotation = 0 
     BUTTON_L = clue.button_b
     BUTTON_R = clue.button_a
 
